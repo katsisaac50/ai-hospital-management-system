@@ -1,0 +1,6 @@
+[submodule "hospital-management-backend"]
+	path = hospital-management-backend
+	url = https://github.com/katsisaac50/ai-hospital-management-backend.git
+[submodule "hospital-management-client"]
+	path = hospital-management-client
+	url = https://github.com/katsisaac50/ai-hospital-management-client.git
