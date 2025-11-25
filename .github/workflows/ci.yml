@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  backend-tests:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:6
+        ports:
+          - 6379:6379
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup backend
+        working-directory: hospital-management-backend
+        run: |
+          npm ci
+
+      - name: Run backend tests (with coverage)
+        working-directory: hospital-management-backend
+        run: |
+          npm test -- --coverage
+
+      - name: Upload backend coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-coverage
+          path: hospital-management-backend/coverage
+
+  client-build:
+    runs-on: ubuntu-latest
+    needs: backend-tests
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install client deps
+        working-directory: hospital-management-client
+        run: |
+          npm ci
+
+      - name: Build client
+        working-directory: hospital-management-client
+        run: |
+          npm run build
