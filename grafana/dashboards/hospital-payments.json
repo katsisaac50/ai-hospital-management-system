@@ -1,0 +1,32 @@
+{
+  "id": null,
+  "title": "Hospital Payments & Notifications",
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Payments processed",
+      "targets": [
+        { "expr": "sum(hospital_payments_total) by (provider)", "refId": "A" }
+      ],
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "SMS deliveries",
+      "targets": [
+        { "expr": "sum(hospital_sms_total) by (status)", "refId": "B" }
+      ],
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 6 }
+    },
+    {
+      "type": "timeseries",
+      "title": "Webhook processing duration (ms)",
+      "targets": [
+        { "expr": "histogram_quantile(0.95, sum(rate(hospital_webhook_processing_duration_ms_bucket[5m])) by (le, provider))", "refId": "C" }
+      ],
+      "gridPos": { "x": 0, "y": 6, "w": 24, "h": 6 }
+    }
+  ],
+  "schemaVersion": 30,
+  "version": 1
+}
